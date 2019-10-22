@@ -1,17 +1,29 @@
 const db = require('../config/db');
+const admin = require('firebase-admin');
 
-const getVideos = (req, res, next) => {
-    
-    db.query('SELECT * FROM movies ORDER BY id ASC', (error, results) => {
-    
-        if (error) {
-            throw error
-        }
-        
-        res.status(200).json(results.rows)
-    
-    })
+const getVideos = (req,res,next) => {
+  admin.firestore().collection('videos').get()
+  .then(snapshot => {
+    return snapshot.docs.map(doc => doc.data())
+  })
+  .then(videos => {
+    // console.log(videos);
+    res.status(200).json(videos);
+  })
 }
+
+// const getVideos = (req, res, next) => {
+    
+//     db.query('SELECT * FROM movies ORDER BY id ASC', (error, results) => {
+    
+//         if (error) {
+//             throw error
+//         }
+        
+//         res.status(200).json(results.rows)
+    
+//     })
+// }
 
 const getVideoById = (req, res) => {
     const id = parseInt(req.params.id)

@@ -9,6 +9,12 @@ var {cloudinaryConfig} = require('./credentials/keys');
 
 var {uploadVid} = require('./routes/index');
 
+
+var admin = require('firebase-admin');
+
+const {firebaseAdminConfig} = require('./credentials/keys');
+admin.initializeApp(firebaseAdminConfig);
+
 cloudinary.config(cloudinaryConfig);
 
 var app = express();
@@ -23,8 +29,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.get('/', uploadVid);
-app.use('/sql', require('./routes/sql'))
+// app.get('/', uploadVid);
+app.use('/', require('./routes/sql'))
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
